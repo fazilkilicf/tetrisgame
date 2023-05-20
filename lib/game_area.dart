@@ -8,7 +8,7 @@ import 'package:tetris/constants/text_constants.dart';
 import 'package:tetris/piece.dart';
 import 'package:tetris/pixel.dart';
 import 'package:tetris/values.dart';
-
+import 'package:animated_emoji/animated_emoji.dart';
 import 'utils/style_utils.dart';
 
 /*
@@ -115,8 +115,20 @@ class _GameAreaState extends State<GameArea> {
                       },
                       child: const Text(TextConstants.startGameText,
                           style: appMenuElementStyle)),
-                  SizedBox(height: defaultVerticalPadding(context)*4),
-                  const Text('love you vikvik ❤️', style: gameScoreStyle)
+                  SizedBox(height: defaultVerticalPadding(context)),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Text('love you vikvik', style: gameScoreStyle),
+                      AnimatedEmoji(
+                        AnimatedEmojis.redHeart,
+                        size: 34,
+                        repeat: true,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: defaultVerticalPadding(context)*1/2),
+                  const Text('developed by efka', style: developedByStyle),
                 ],
               ),
             ));
@@ -150,7 +162,18 @@ class _GameAreaState extends State<GameArea> {
                         resetGame();
                       },
                       child: const Text(TextConstants.playAgainText,
-                          style: appMenuElementStyle))
+                          style: appMenuElementStyle)),
+                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
+                  TextButton(
+                      onPressed: () {
+                        // close dialog
+                        Navigator.pop(context);
+
+                        // show main game dialog
+                        showGameDialog();
+                      },
+                      child: const Text(TextConstants.mainMenuText,
+                          style: appMenuElementStyle)),
                 ],
               ),
             ));

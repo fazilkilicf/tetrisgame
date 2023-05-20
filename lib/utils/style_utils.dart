@@ -18,3 +18,9 @@ const gameScoreStyle = TextStyle(
     fontSize: 24.0,
     fontWeight: FontWeight.w400,
     color: Colors.white);
+
+const developedByStyle = TextStyle(
+    fontFamily: TextConstants.pixelFontFamilyName,
+    fontSize: 18.0,
+    fontWeight: FontWeight.w400,
+    color: Colors.white);

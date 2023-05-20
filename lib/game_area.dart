@@ -2,9 +2,14 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:tetris/constants/path_constants.dart';
+import 'package:tetris/constants/size_constants.dart';
+import 'package:tetris/constants/text_constants.dart';
 import 'package:tetris/piece.dart';
 import 'package:tetris/pixel.dart';
 import 'package:tetris/values.dart';
+
+import 'utils/style_utils.dart';
 
 /*
 
@@ -41,7 +46,10 @@ class _GameAreaState extends State<GameArea> {
     super.initState();
 
     // start game when app starts
-    startGame();
+    /* startGame(); */
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showGameDialog();
+    });
   }
 
   void startGame() {
@@ -76,24 +84,75 @@ class _GameAreaState extends State<GameArea> {
     );
   }
 
+  // game dialog
+  void showGameDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Dialog.fullscreen(
+              backgroundColor: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    PathConstants.tetrisImgPath,
+                    width: 128.0,
+                    height: 128.0,
+                  ),
+                  SizedBox(height: defaultVerticalPadding(context)),
+                  const Text(
+                    TextConstants.appName,
+                    style: tetrisHeadStyle,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        // close dialog
+                        Navigator.pop(context);
+
+                        // reset game
+                        resetGame();
+                      },
+                      child: const Text(TextConstants.startGameText,
+                          style: appMenuElementStyle)),
+                  SizedBox(height: defaultVerticalPadding(context)*4),
+                  const Text('love you vikvik ❤️', style: gameScoreStyle)
+                ],
+              ),
+            ));
+  }
+
   // game over message
   void showGameOverDialog() {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => AlertDialog(
-              title: const Text('Game Over'),
-              content: Text("You score is: $currentScore"),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      // reset the game
-                      resetGame();
+        builder: (context) => Dialog.fullscreen(
+              backgroundColor: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    TextConstants.gameOverText,
+                    style: tetrisHeadStyle,
+                  ),
+                  Text(
+                    'Score: $currentScore',
+                    style: gameScoreStyle,
+                  ),
+                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
+                  TextButton(
+                      onPressed: () {
+                        // close dialog
+                        Navigator.pop(context);
 
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Play again"))
-              ],
+                        // reset game
+                        resetGame();
+                      },
+                      child: const Text(TextConstants.playAgainText,
+                          style: appMenuElementStyle))
+                ],
+              ),
             ));
   }
 
@@ -293,8 +352,7 @@ class _GameAreaState extends State<GameArea> {
                   // landed pieces
                   else if (gameArea[row][col] != null) {
                     final Tetromino? tetrominoType = gameArea[row][col];
-                    return Pixel(
-                        color: tetrominoColors[tetrominoType]);
+                    return Pixel(color: tetrominoColors[tetrominoType]);
                   }
                   // blank pixel
                   else {
@@ -306,7 +364,7 @@ class _GameAreaState extends State<GameArea> {
           // SCORE
           Text(
             'Score: $currentScore',
-            style: const TextStyle(color: Colors.white),
+            style: gameScoreStyle,
           ),
 
           // GAME CONTROLS

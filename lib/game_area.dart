@@ -80,6 +80,7 @@ class _GameAreaState extends State<GameArea> {
   void showGameOverDialog() {
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) => AlertDialog(
               title: const Text('Game Over'),
               content: Text("You score is: $currentScore"),

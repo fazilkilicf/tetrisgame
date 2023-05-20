@@ -318,19 +318,19 @@ class _GameAreaState extends State<GameArea> {
                 IconButton(
                     onPressed: moveLeft,
                     color: Colors.white,
-                    icon: Icon(Icons.arrow_back_ios)),
+                    icon: const Icon(Icons.arrow_back_ios)),
 
                 // rotate
                 IconButton(
                     onPressed: rotatePiece,
                     color: Colors.white,
-                    icon: Icon(Icons.rotate_right)),
+                    icon: const Icon(Icons.rotate_right)),
 
                 // right
                 IconButton(
                     onPressed: moveRight,
                     color: Colors.white,
-                    icon: Icon(Icons.arrow_forward_ios)),
+                    icon: const Icon(Icons.arrow_forward_ios)),
               ],
             ),
           )

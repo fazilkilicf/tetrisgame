@@ -35,11 +35,17 @@ class _GameAreaState extends State<GameArea> {
   // current tetris piece
   Piece currentPiece = Piece(type: Tetromino.L);
 
+  // frame refresh rate
+  Duration frameRate = const Duration(milliseconds: 500);
+
   // current score
   int currentScore = 0;
 
   // game over status
   bool gameOver = false;
+
+  // pause game
+  bool pause = false;
 
   @override
   void initState() {
@@ -55,8 +61,6 @@ class _GameAreaState extends State<GameArea> {
   void startGame() {
     currentPiece.initializePiece();
 
-    // frame refresh rate
-    Duration frameRate = const Duration(milliseconds: 500);
     gameLoop(frameRate);
   }
 
@@ -75,6 +79,12 @@ class _GameAreaState extends State<GameArea> {
             showGameOverDialog();
           }
 
+          // check if game is paused
+          if (pause == true) {
+            timer.cancel();
+            showPauseDialog();
+          }
+
           // check landing
           checkLanding();
 
@@ -82,6 +92,30 @@ class _GameAreaState extends State<GameArea> {
         });
       },
     );
+  }
+
+  // pause game
+  void pauseGame() {
+    setState(() {
+      pause = true;
+    });
+  }
+
+  // resume game
+  void resumeGame() {
+    Navigator.pop(context);
+    setState(() {
+      pause = false;
+    });
+    gameLoop(frameRate);
+  }
+
+  // restart game
+  void restartGame() {
+    setState(() {
+      pause = false;
+    });
+    resetGame();
   }
 
   // game dialog
@@ -127,8 +161,54 @@ class _GameAreaState extends State<GameArea> {
                       ),
                     ],
                   ),
-                  SizedBox(height: defaultVerticalPadding(context)*1/2),
+                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
                   const Text('developed by efka', style: developedByStyle),
+                ],
+              ),
+            ));
+  }
+
+  // game paused dialog
+  void showPauseDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Dialog.fullscreen(
+              backgroundColor: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    TextConstants.pausedText,
+                    style: tetrisHeadStyle,
+                  ),
+                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
+                  TextButton(
+                      onPressed: resumeGame,
+                      child: const Text(TextConstants.resumeText,
+                          style: appMenuElementStyle)),
+                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
+                  TextButton(
+                      onPressed: () {
+                        // close dialog
+                        Navigator.pop(context);
+
+                        // restart game
+                        restartGame();
+                      },
+                      child: const Text(TextConstants.restartText,
+                          style: appMenuElementStyle)),
+                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
+                  TextButton(
+                      onPressed: () {
+                        // close dialog
+                        Navigator.pop(context);
+
+                        // show main game dialog
+                        showGameDialog();
+                      },
+                      child: const Text(TextConstants.mainMenuText,
+                          style: appMenuElementStyle)),
                 ],
               ),
             ));
@@ -382,6 +462,15 @@ class _GameAreaState extends State<GameArea> {
                     return Pixel(color: Colors.grey[900]);
                   }
                 }),
+          ),
+
+          // Menu Text Button
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: TextButton(
+                onPressed: pauseGame,
+                child: const Text(TextConstants.menuText,
+                    style: appMenuElementStyle)),
           ),
 
           // SCORE

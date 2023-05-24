@@ -153,16 +153,14 @@ class _GameAreaState extends State<GameArea> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
-                      Text('love you vikvik', style: gameScoreStyle),
+                      Text('developed by efka', style: developedByStyle),
                       AnimatedEmoji(
-                        AnimatedEmojis.redHeart,
+                        AnimatedEmojis.sunglassesFace,
                         size: 34,
                         repeat: true,
                       ),
                     ],
                   ),
-                  SizedBox(height: defaultVerticalPadding(context) * 1 / 2),
-                  const Text('developed by efka', style: developedByStyle),
                 ],
               ),
             ));
